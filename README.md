@@ -19,6 +19,19 @@ How are we implementing it?
 Use AJAX, specifically $.ajax(), to read the provided JSON file.
 Each object should become a new instance of a constructor function. Refer to the data to determine the necessary properties.
 Use jQuery to make a copy of the HTML template of the photo component. For each object, fill in the duplicated template with its properties, then append the copy to the DOM.
+
+
+Number and name of feature: Feature #1
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 1:45
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+
 Feature #2: Filter images
 
 Why are we implementing this feature?
@@ -32,6 +45,17 @@ How are we implementing it?
 
 Create a <select> element which contains unique <option> elements extracted dynamically from the JSON file, one for each keyword.
 Use an event handler to respond when the user chooses an option from the select menu. Hide all of the images, then show those whose keyword matches the option chosen.
+
+Number and name of feature: Feature #2
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
 Feature #3: Style the application
 
 Why are we implementing this feature?
@@ -58,3 +82,13 @@ How are we implementing it?
 
 Add the ability for the user to sort the images by either title or by number of horns.
 Sort the images by one of the properties on page load. This should also apply to the second page of images.
+
+Number and name of feature: Feature#3
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
