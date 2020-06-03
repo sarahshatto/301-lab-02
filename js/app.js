@@ -1,14 +1,8 @@
-// view the images on the page so that I can browse the photo collection.
-
-// the photo gallery should display all of the images in the gallery
-
-// Use AJAX, specifically $.ajax(), to read the provided JSON file.
-// Each object should become a new instance of a constructor function. Refer to the data to determine the necessary properties.
-// Use jQuery to make a copy of the HTML template of the photo component. For each object, fill in the duplicated template with its properties, then append the copy to the DOM.
-
-// GOAL : Render each item and their info to the index.html page. 
+'use strict'
 
 let allHorns = [];
+let keywords = [];
+
 
 function HornBeing (obj) {
   this.image_url= obj.image_url;
@@ -22,7 +16,8 @@ function HornBeing (obj) {
 HornBeing.prototype.render=function(){
   console.log('I am the render function');
   const theTemplate = $('#photo-template').html(); 
-  const $newSection = $(`<section> ${theTemplate} </section>`);
+  const $newSection = $(`<section class=${this.keyword
+  }> ${theTemplate} </section>`);
   // Name of creature 
   $newSection.find('h2').text(this.title);
   $newSection.find('p').text(this.description);
@@ -30,34 +25,73 @@ HornBeing.prototype.render=function(){
   $('main').append($newSection);
 }
 
+const getKeywords = () =>{
+  allHorns.forEach(beast => {
+    keywords.push(beast.keyword);
+  }) 
+}
+
+const dropDown = () =>{
+  let unique = [];
+  // this forEach loop is filtering out duplicates
+  keywords.forEach(beast => {
+    let present = unique.includes(beast)
+    if (!present) {
+      unique.push(beast);
+    }
+  })
+  unique.forEach(keyword => {
+    const $newOption = $(`<option value=${keyword}> ${keyword} </option>`); 
+    $('#dropdown-template').append($newOption);
+  })
+}
+// on click, display image that correlates with the keyword. 
+
+// event listener
+$('select').on('change', function(){
+  let $selection = $(this).val();
+  console.log($selection)
+  $('section').hide()
+
+$(`section[class="${$selection}"]`).show()
+})
+
+// var x = document.getElementById("banana");
+// x.onclick = function(){
+//   document.body.innerHTML = Date();
+// }
+
+// ${"#banana"}.click(function(){
+//   $("body").html(date());
+// });
+
+// HornBeing.prototype.dropdown=function(){
+//   console.log('I am the dropdown menu');
+//   const myTemplate = $('#dropdown-template').html();
+//   const $newOption = $(`<option> ${myTemplate} </option>`);
+//   $newOption.find('option').text(this.keyword);
+//   $('header').append($newOption);
+// }
+
 $.ajax('data/page-1.json', {method: 'GET', dataType: 'JSON'})
   .then( hornedBeast => {
     console.log('this is the data', hornedBeast);
     hornedBeast.forEach(value => {
       new HornBeing(value).render();
     })
-      
-    });
+    getKeywords();
+    dropDown();
+});
 
-// I need to render the object instances to the index.html page.
-  // prototype
-    // make a copy
-    // fill it with my object instance
-    // append it to the DOM 
+// As a user, I want to be able to filter the images so that I can view only images that match a keyword.
+// What are we going to implement?
 
-// Select all of the HTML in the template
+// Given that a user clicks on the dropdown menu When the user selects one of the options Then only the images whose keyword matches the option should be displayed
 
-// Create a new section
+// How are we implementing it?
 
-// fill my section with the HTML template
+// Create a <select> element which contains unique <option> elements extracted dynamically from the JSON file, one for each keyword.
+// Use an event handler to respond when the user chooses an option from the select menu. Hide all of the images, then show those whose keyword matches the option chosen.
 
-// fill the <h2> with the name
-
-// fill the <p> with hobbies
-
-// fill the <src> of the image with image_url
-
-// append to the DOM
-
-// I need to get the data.JSON and make new object instances with it
-
+// we need to render dropdown list items through the DOM 
+// 
