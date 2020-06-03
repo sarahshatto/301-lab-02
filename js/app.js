@@ -16,7 +16,8 @@ function HornBeing (obj) {
 HornBeing.prototype.render=function(){
   console.log('I am the render function');
   const theTemplate = $('#photo-template').html(); 
-  const $newSection = $(`<section> ${theTemplate} </section>`);
+  const $newSection = $(`<section class=${this.keyword
+  }> ${theTemplate} </section>`);
   // Name of creature 
   $newSection.find('h2').text(this.title);
   $newSection.find('p').text(this.description);
@@ -47,7 +48,13 @@ const dropDown = () =>{
 // on click, display image that correlates with the keyword. 
 
 // event listener
-addEventListener('click', eventHandler);
+$('select').on('change', function(){
+  let $selection = $(this).val();
+  console.log($selection)
+  $('section').hide()
+
+$(`section[class="${$selection}"]`).show()
+})
 
 // var x = document.getElementById("banana");
 // x.onclick = function(){
