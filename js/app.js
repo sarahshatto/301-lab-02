@@ -11,29 +11,36 @@ function HornBeing (obj) {
   this.keyword= obj.keyword;
   this.horns= obj.horns;
   allHorns.push(this);
-} 
+}
 
 HornBeing.prototype.render=function(){
   console.log('I am the render function');
-  const theTemplate = $('#photo-template').html(); 
+  const theTemplate = $('#photo-template').html();
   const $newSection = $(`<section class=${this.keyword
   }> ${theTemplate} </section>`);
-  // Name of creature 
+  // Name of creature
   $newSection.find('h2').text(this.title);
   $newSection.find('p').text(this.description);
   $newSection.find('img').attr('src', this.image_url);
   $('main').append($newSection);
 }
 
+HornBeing.prototype.toHTML = function(){
+  let template = $('#photo-template').html();
+  let html = Mustache.render(template, this);
+  return html;
+}
+
 const getKeywords = () =>{
   allHorns.forEach(beast => {
     keywords.push(beast.keyword);
-  }) 
+  })
 }
 
 const dropDown = () =>{
+  $('#dropdown-template').empty();
   let unique = [];
-  // this forEach loop is filtering out duplicates
+
   keywords.forEach(beast => {
     let present = unique.includes(beast)
     if (!present) {
@@ -41,57 +48,73 @@ const dropDown = () =>{
     }
   })
   unique.forEach(keyword => {
-    const $newOption = $(`<option value=${keyword}> ${keyword} </option>`); 
+    const $newOption = $(`<option value=${keyword}> ${keyword} </option>`);
     $('#dropdown-template').append($newOption);
   })
 }
-// on click, display image that correlates with the keyword. 
 
-// event listener
+// const newPage = () => {
+//   console.log('this is the new page');
+//   const newTemplate = $('#pagination').html();
+//   const $newButton = $(`<section> ${newTemplate} </section>`);
+//   $newButton.find('a').text('link');
+//   $('main').append($newButton);
+// }
+
+const newPage = $('<a> "Next Page" </a>');
+$('#pagination').append(newPage);
+
 $('select').on('change', function(){
   let $selection = $(this).val();
   console.log($selection)
   $('section').hide()
 
-$(`section[class="${$selection}"]`).show()
+  $(`section[class="${$selection}"]`).show()
 })
 
-// var x = document.getElementById("banana");
-// x.onclick = function(){
-//   document.body.innerHTML = Date();
-// }
 
-// ${"#banana"}.click(function(){
-//   $("body").html(date());
-// });
+function dataSet1() {
+  $.ajax('data/page-1.json', {method: 'GET', dataType: 'JSON'})
+    .then( hornedBeast => {
+      console.log('this is the data', hornedBeast);
+      hornedBeast.forEach(value => {
+        new HornBeing(value).render();
+      })
+      getKeywords();
+      dropDown();
+    });
+}
 
-// HornBeing.prototype.dropdown=function(){
-//   console.log('I am the dropdown menu');
-//   const myTemplate = $('#dropdown-template').html();
-//   const $newOption = $(`<option> ${myTemplate} </option>`);
-//   $newOption.find('option').text(this.keyword);
-//   $('header').append($newOption);
-// }
+function dataSet2() {
+  $.ajax('data/page-2.json', {method: 'GET', dataType: 'JSON'})
+    .then( hornedBeast => {
+      console.log('this is the data', hornedBeast);
+      hornedBeast.forEach(value => {
+        new HornBeing(value).render();
+      })
+      getKeywords();
+      dropDown();
+      const firstPage = $('<a> "home" </a>');
+      $('#pagination2').append(firstPage);
+    });
+}
 
-$.ajax('data/page-1.json', {method: 'GET', dataType: 'JSON'})
-  .then( hornedBeast => {
-    console.log('this is the data', hornedBeast);
-    hornedBeast.forEach(value => {
-      new HornBeing(value).render();
-    })
-    getKeywords();
-    dropDown();
-});
 
-// As a user, I want to be able to filter the images so that I can view only images that match a keyword.
-// What are we going to implement?
+$(window).on('load', function() {
+  dataSet1();
+})
 
-// Given that a user clicks on the dropdown menu When the user selects one of the options Then only the images whose keyword matches the option should be displayed
+$('#pagination').on('click', function(){
+  console.log(event);
+  allHorns = [];
+  $('section').empty();
+  dataSet2();
 
-// How are we implementing it?
+})
 
-// Create a <select> element which contains unique <option> elements extracted dynamically from the JSON file, one for each keyword.
-// Use an event handler to respond when the user chooses an option from the select menu. Hide all of the images, then show those whose keyword matches the option chosen.
-
-// we need to render dropdown list items through the DOM 
-// 
+$('#pagination2').on('click', function(){
+  console.log(event);
+  allHorns = [];
+  $('section').empty();
+  dataSet1();
+})
