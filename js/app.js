@@ -1,6 +1,8 @@
 'use strict'
 
 let allHorns = [];
+let keywords = [];
+
 
 function HornBeing (obj) {
   this.image_url= obj.image_url;
@@ -22,21 +24,56 @@ HornBeing.prototype.render=function(){
   $('main').append($newSection);
 }
 
-HornBeing.prototype.dropdown=function(){
-  console.log('I am the dropdown menu');
-  const myTemplate = $('#dropdown-template').html();
-  const $newOption = $(`<option> ${myTemplate} </option>`);
-  $newOption.find('option').text(this.keyword);
-  $('header').append($newOption);
+const getKeywords = () =>{
+  allHorns.forEach(beast => {
+    keywords.push(beast.keyword);
+  }) 
 }
+
+const dropDown = () =>{
+  let unique = [];
+  // this forEach loop is filtering out duplicates
+  keywords.forEach(beast => {
+    let present = unique.includes(beast)
+    if (!present) {
+      unique.push(beast);
+    }
+  })
+  unique.forEach(keyword => {
+    const $newOption = $(`<option value=${keyword}> ${keyword} </option>`); 
+    $('#dropdown-template').append($newOption);
+  })
+}
+// on click, display image that correlates with the keyword. 
+
+// event listener
+addEventListener('click', eventHandler);
+
+// var x = document.getElementById("banana");
+// x.onclick = function(){
+//   document.body.innerHTML = Date();
+// }
+
+// ${"#banana"}.click(function(){
+//   $("body").html(date());
+// });
+
+// HornBeing.prototype.dropdown=function(){
+//   console.log('I am the dropdown menu');
+//   const myTemplate = $('#dropdown-template').html();
+//   const $newOption = $(`<option> ${myTemplate} </option>`);
+//   $newOption.find('option').text(this.keyword);
+//   $('header').append($newOption);
+// }
 
 $.ajax('data/page-1.json', {method: 'GET', dataType: 'JSON'})
   .then( hornedBeast => {
     console.log('this is the data', hornedBeast);
     hornedBeast.forEach(value => {
       new HornBeing(value).render();
-      new HornBeing(value).dropdown();
     })
+    getKeywords();
+    dropDown();
 });
 
 // As a user, I want to be able to filter the images so that I can view only images that match a keyword.
