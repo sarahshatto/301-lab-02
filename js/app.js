@@ -13,22 +13,10 @@ function HornBeing (obj) {
   allHorns.push(this);
 }
 
-HornBeing.prototype.render=function(){
-  console.log('I am the render function');
-  const theTemplate = $('#photo-template').html();
-  const $newSection = $(`<section class=${this.keyword
-  }> ${theTemplate} </section>`);
-  // Name of creature
-  $newSection.find('h2').text(this.title);
-  $newSection.find('p').text(this.description);
-  $newSection.find('img').attr('src', this.image_url);
-  $('main').append($newSection);
-}
-
 HornBeing.prototype.toHTML = function(){
   let template = $('#photo-template').html();
   let html = Mustache.render(template, this);
-  return html;
+  $('main').append(html);
 }
 
 const getKeywords = () =>{
@@ -53,14 +41,6 @@ const dropDown = () =>{
   })
 }
 
-// const newPage = () => {
-//   console.log('this is the new page');
-//   const newTemplate = $('#pagination').html();
-//   const $newButton = $(`<section> ${newTemplate} </section>`);
-//   $newButton.find('a').text('link');
-//   $('main').append($newButton);
-// }
-
 const newPage = $('<a> "Next Page" </a>');
 $('#pagination').append(newPage);
 
@@ -69,7 +49,8 @@ $('select').on('change', function(){
   console.log($selection)
   $('section').hide()
 
-  $(`section[class="${$selection}"]`).show()
+  // $(`section[class="${$selection}"]`).show()
+  $(`.${$selection}`).show()
 })
 
 
@@ -78,7 +59,7 @@ function dataSet1() {
     .then( hornedBeast => {
       console.log('this is the data', hornedBeast);
       hornedBeast.forEach(value => {
-        new HornBeing(value).render();
+        new HornBeing(value).toHTML();
       })
       getKeywords();
       dropDown();
@@ -90,7 +71,7 @@ function dataSet2() {
     .then( hornedBeast => {
       console.log('this is the data', hornedBeast);
       hornedBeast.forEach(value => {
-        new HornBeing(value).render();
+        new HornBeing(value).toHTML();
       })
       getKeywords();
       dropDown();
